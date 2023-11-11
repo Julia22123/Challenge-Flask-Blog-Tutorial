@@ -18,6 +18,18 @@ def get_db_connection():
     #the db connection will return rows we can access like python dictionaries
     conn.row_factory = sqlite3.Row
 
+#Function to get a post
+def get_post(post_id):
+    #get a db conection
+    conn = get_db_connection()
+    post = conn.execute('SELECT * FROM posts WHERE id = ?', (post_id)).fetchone()
+    conn.close()
+
+    if post is None:
+        abort(404)
+
+    return post
+
 # use the app.route() decorator to create a Flask view function called index()
 @app.route('/')
 def index():

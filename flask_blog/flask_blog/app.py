@@ -27,9 +27,26 @@ def index():
 
 @app.route('/create/', methods=('GET', 'POST'))
 def create():
-    
+    if request.method == "POST":
+        #get the title and content
+        title = request.form['title']
+        content = request.form['content']
 
-    return "<h1>Create a Post Page<\h1>"
+        #display an error if title or content not submitted
+        #otherwise make a database connection ans insert the post
+        if not title:
+            flash('Title is required!')
+        elif not content:
+            flash('Content is required!')
+        else:
+            conn = get_db_connection()
+            conn.excute('INSERT INTO posts (title, content) VALUES (?, ?)', (title, content)}
+            conn.commit()
+            conn.close()
+            return redirect(url_for('index')}
+            
+
+    return render_template('create.html')
 
 #route to edit post
 @app.route('/<int:id>/edit/', methods=('GET', 'POST'))

@@ -63,9 +63,28 @@ def create():
 #route to edit post
 @app.route('/<int:id>/edit/', methods=('GET', 'POST'))
 def edit(id):
+    ppost = get_post(id)
 
+    if request.method == "POST":
+        #get the title and content
+        title = request.form['title']
+        content = request.form['content']
 
-    return "<h1>Edit a Post Page<\h1>"
+        #display an error if title or content not submitted
+        #otherwise make a database connection ans insert the post
+        if not title:
+            flash('Title is required!')
+        elif not content:
+            flash('Content is required!')
+        else:
+            conn = get_db_connection()
+            conn.excute('UPDATE posts SET title = ?, content = ? WHERE id = ?", (title, content, id)}
+            conn.commit()
+            conn.close()
+            return redirect(url_for('index')}
+            
+
+    return render_template('edit.html', post=post)
 
 # route to delete a post
 @app.route('/<int:id>/delete/', methods=('POST',))
